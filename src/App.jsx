@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+  
+  let colors = ['blue', 'white', 'black', 'red', 'green', 'pink'];
+  const [backgroundColor, setbackgroundColor] = useState(loadStateFromLocalStorage||'white');
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  function storeSateToLocalStorage(state) {
+    localStorage.setItem('appState',JSON.stringify(state));
+  }
+  function loadStateFromLocalStorage() {
+    const state = localStorage.getItem('appState');
+    return state ? JSON.parse(state) : undefined;
+  }
+  useEffect(() => {
+    storeSateToLocalStorage(backgroundColor);
+  },[backgroundColor])
+  return <>
+    <div id="myCanvas" style={{backgroundColor:backgroundColor}}>
+    </div>
+    <div id="colorpicker">
+      {colors.map((color) => {
+        return (
+          <button className="colorBtn" style={{backgroundColor:color}} onClick={()=>setbackgroundColor(color)}></button>
+        )
+      })}
+    </div>
+  </>;
 }
 
-export default App
+export default App;
